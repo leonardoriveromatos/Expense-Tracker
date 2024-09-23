@@ -1,0 +1,14 @@
+# Archivos compilados de Python
+__pycache__/
+*.py[cod]
+
+# Entorno virtual
+venv/
+
+# Configuración de VSCode
+.vscode/
+
+# Archivos de logs
+*.log
+
+data.json
