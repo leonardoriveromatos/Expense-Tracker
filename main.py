@@ -22,3 +22,8 @@ if args.add:
     expenses.append(new_expense)
     save(expenses)
     print(f"Gasto añadido {args.add}")
+elif args.list:
+    if expenses:
+        print("List Expenses")
+        for expense in expenses:
+            print(f"ID: {expense['id']}, Description: {expense['description']}, Fecha: {expense['date']}, Time: {expense['time']}")
