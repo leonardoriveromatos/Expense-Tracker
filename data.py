@@ -1,14 +1,14 @@
 import json
 import os
 
-EXPENSES_FILE = "expenses.json"
+FILE = "expenses.json"
 
-def load_expenses():
-    if os.path.exists(EXPENSES_FILE):
-        with open(EXPENSES_FILE, "r") as file:
+def load():
+    if os.path.exists(FILE):
+        with open(FILE, "r") as file:
             return json.load(file)
     return []
 
-def save_expenses(expenses):
-    with open(EXPENSES_FILE, "w") as file:
-        json.dump(expenses, file, indent=4 )
+def save(e):
+    with open(FILE, "w") as file:
+        json.dump(e, file, indent=4)
