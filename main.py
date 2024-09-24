@@ -21,7 +21,7 @@ if args.add:
     new_expense = {"id": expense_id, "date": current_date, "time": current_time, "description": args.add, "amount": args.amount }
     expenses.append(new_expense)
     save(expenses)
-    print(f"Gasto añadido {args.add}")
+    print(f"Expense added successfully ID {expense_id}")
 elif args.list:
     if expenses:
         print("List Expenses")
