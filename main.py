@@ -5,10 +5,9 @@ from datetime import datetime
 # Crear el parser
 parser = argparse.ArgumentParser(description="Expense Tracker CLI")
 
-parser.add_argument("command", choices=["add", "remove", "update"])
+parser.add_argument("command", choices=["add", "remove", "update", "list"])
 parser.add_argument("-d","--description", help = "Create new expense", required = False)
 parser.add_argument("-am","--amount", help = "Amount", required = False)
-parser.add_argument("-l","--list", action = "store_true", help = "List all expenses", required = False)
 
 args = parser.parse_args()
 
@@ -23,7 +22,7 @@ if args.command == 'add':
     expenses.append(new_expense)
     save(expenses)
     print(f"Expense added successfully ID {expense_id}")
-elif args.list:
+elif args.command == 'list':
     if expenses:
         print("List Expenses")
         for expense in expenses:
