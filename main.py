@@ -39,13 +39,20 @@ elif args.command == 'summary':
     elif expenses:
         total = sum(int(expense['amount']) for expense in expenses)
     print(f"Total expenses: {total}")
+
 elif args.command == 'delete':
-    if args.id:
-        expenses_to_remove = next(expense for expense in expenses if expense['id'] == int(args.id))
-        expenses.remove(expenses_to_remove)
-        save(expenses)
-        print("Expense deleted successfully")
-        
+    if not args.id:
+        print("Error: You must provide an ID to delete an expense.")
+    else:
+        try:
+            expense_to_remove = next(expense for expense in expenses if expense['id'] == int(args.id))
+        except StopIteration:
+            print(f"Error: Expense with ID {args.id} not found.")
+        else:
+            expenses.remove(expense_to_remove)
+            save(expenses)
+            print("Expense deleted successfully")    
+
 elif args.command == 'update':
     if not args.id:
         print("Error: You must provide an ID to update an expense.")
