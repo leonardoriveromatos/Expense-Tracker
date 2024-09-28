@@ -37,7 +37,6 @@ elif args.command == 'summary':
     elif expenses:
         total = sum(int(expense['amount']) for expense in expenses)
     print(f"Total expenses: {total}")
-
 elif args.command == 'delete':
     if args.id:
         expenses_to_remove = next(expense for expense in expenses if expense['id'] == int(args.id))
