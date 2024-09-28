@@ -75,6 +75,14 @@ elif args.command == 'delete':
             expenses.remove(expense_to_remove)
             save(expenses)
             print("Expense deleted successfully")    
+            
+elif args.command == 'clear':
+    if expenses:
+        expenses.clear()
+        save(expenses)
+        print("The expense list was cleaned")
+    else:
+        print("The expense list is empty")
 
 elif args.command == 'update':
     if not args.id:
