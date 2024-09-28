@@ -32,13 +32,22 @@ elif args.command == 'list':
         print("List Expenses")
         for expense in expenses:
             print(f"ID: {expense['id']}, Description: {expense['description']}, Fecha: {expense['date']}, Time: {expense['time']}")
+
 elif args.command == 'summary':
-    if expenses and args.month:
-        month = int(args.month)
-        total = sum(int(expense['amount']) for expense in expenses if datetime.strptime(expense['date'], "%Y-%m-%d").month == month)
-    elif expenses:
-        total = sum(int(expense['amount']) for expense in expenses)
-    print(f"Total expenses: {total}")
+    if not expenses:
+        print("Error: No expenses to summarize.")
+    else:
+        total = 0
+        if args.month:
+            try:
+                month = int(args.month)
+                total = sum(int(expense['amount']) for expense in expenses if datetime.strptime(expense['date'], "%Y-%m-%d").month == month)
+            except ValueError:
+                print("Error: Month must be a valid integer.")
+        else:
+            total = sum(int(expense['amount']) for expense in expenses)
+        print(f"Total expenses: {total}")
+
 
 elif args.command == 'delete':
     if not args.id:
