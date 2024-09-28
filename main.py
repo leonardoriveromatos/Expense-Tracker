@@ -5,7 +5,7 @@ from datetime import datetime
 # Crear el parser
 parser = argparse.ArgumentParser(description="Expense Tracker CLI")
 
-parser.add_argument("command", choices=["add", "remove", "update", "list", "summary", "delete"])
+parser.add_argument("command", choices=["add", "remove", "update", "list", "summary", "delete", "clear"])
 parser.add_argument("-d","--description", help = "Create new expense", required = False)
 parser.add_argument("-am","--amount", help = "Amount", required = False)
 parser.add_argument("-i","--id", help = "ID", required = False)
@@ -22,16 +22,31 @@ current_time = datetime.now().strftime("%H:%M")
 expenses = load()
 
 if args.command == 'add':
-    expense_id = len(expenses) + 1
-    new_expense = {"id": expense_id, "date": current_date, "time": current_time, "description": args.description, "amount": args.amount }
-    expenses.append(new_expense)
-    save(expenses)
-    print(f"Expense added successfully ID {expense_id}")
+    if args.description and args.amount:
+        try:
+            expense_id = len(expenses) + 1
+            new_expense = {
+                "id": expense_id,
+                "date": current_date,
+                "time": current_time,
+                "description": args.description,
+                "amount": float(args.amount)
+            }
+            expenses.append(new_expense)
+            save(expenses)
+            print(f"Expense added successfully with ID {expense_id}")
+        except ValueError:
+            print("Error: Amount must be a valid number.")
+    else:
+        print("Error: Description and amount are required.")
+        
 elif args.command == 'list':
     if expenses:
-        print("List Expenses")
+        print("List of Expenses:")
         for expense in expenses:
-            print(f"ID: {expense['id']}, Description: {expense['description']}, Fecha: {expense['date']}, Time: {expense['time']}")
+            print(f"ID: {expense['id']}, Description: {expense['description']}, Date: {expense['date']}, Time: {expense['time']}")
+    else:
+        print("No expenses found.")
 
 elif args.command == 'summary':
     if not expenses:
@@ -45,9 +60,8 @@ elif args.command == 'summary':
             except ValueError:
                 print("Error: Month must be a valid integer.")
         else:
-            total = sum(int(expense['amount']) for expense in expenses)
+            total = sum(float(expense['amount']) for expense in expenses)
         print(f"Total expenses: {total}")
-
 
 elif args.command == 'delete':
     if not args.id:
