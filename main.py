@@ -5,9 +5,12 @@ from datetime import datetime
 # Crear el parser
 parser = argparse.ArgumentParser(description="Expense Tracker CLI")
 
-parser.add_argument("command", choices=["add", "remove", "update", "list"])
+parser.add_argument("command", choices=["add", "remove", "update", "list", "summary"])
 parser.add_argument("-d","--description", help = "Create new expense", required = False)
 parser.add_argument("-am","--amount", help = "Amount", required = False)
+parser.add_argument("-i","--id", help = "ID", required = False)
+parser.add_argument("-m","--month", help = "Amount", required = False)
+
 
 args = parser.parse_args()
 
@@ -27,3 +30,10 @@ elif args.command == 'list':
         print("List Expenses")
         for expense in expenses:
             print(f"ID: {expense['id']}, Description: {expense['description']}, Fecha: {expense['date']}, Time: {expense['time']}")
+elif args.command == 'summary':
+    if expenses and args.month:
+        month = int(args.month)  # Obtener el mes desde el argumento
+        total = sum(int(expense['amount']) for expense in expenses if datetime.strptime(expense['date'], "%Y-%m-%d").month == month)
+    elif expenses:
+        total = sum(int(expense['amount']) for expense in expenses)
+    print(f"Total expenses for month {month}: {total}")
