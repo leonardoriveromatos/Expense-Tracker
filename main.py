@@ -10,6 +10,8 @@ parser.add_argument("-d","--description", help = "Create new expense", required 
 parser.add_argument("-am","--amount", help = "Amount", required = False)
 parser.add_argument("-i","--id", help = "ID", required = False)
 parser.add_argument("-m","--month", help = "Amount", required = False)
+parser.add_argument("-nd","--new_description", help = "New Description", required = False)
+parser.add_argument("-na","--new_amount", help = "New Amount", required = False)
 
 
 args = parser.parse_args()
@@ -43,3 +45,20 @@ elif args.command == 'delete':
         expenses.remove(expenses_to_remove)
         save(expenses)
         print("Expense deleted successfully")
+elif args.command == 'update':
+    if expenses and args.id and args.new_description and args.new_amount:
+        expenses_to_update = next(expense for expense in expenses if expense['id'] == int(args.id))
+        expenses_to_update['description'] = args.new_description
+        expenses_to_update['amount'] = args.new_amount
+        save(expenses)
+        print("Updated successfully")
+    elif expenses and args.id and args.new_description:
+        expenses_to_update = next(expense for expense in expenses if expense['id'] == int(args.id))
+        expenses_to_update['description'] = args.new_description
+        save(expenses)
+        print("Updated successfully")
+    elif expenses and args.id and args.new_amount:
+        expenses_to_update = next(expense for expense in expenses if expense['id'] == int(args.id))
+        expenses_to_update['amount'] = args.new_amount
+        save(expenses)
+        print("Updated successfully")
