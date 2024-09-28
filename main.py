@@ -45,20 +45,23 @@ elif args.command == 'delete':
         expenses.remove(expenses_to_remove)
         save(expenses)
         print("Expense deleted successfully")
+        
 elif args.command == 'update':
-    if expenses and args.id and args.new_description and args.new_amount:
-        expenses_to_update = next(expense for expense in expenses if expense['id'] == int(args.id))
-        expenses_to_update['description'] = args.new_description
-        expenses_to_update['amount'] = args.new_amount
-        save(expenses)
-        print("Updated successfully")
-    elif expenses and args.id and args.new_description:
-        expenses_to_update = next(expense for expense in expenses if expense['id'] == int(args.id))
-        expenses_to_update['description'] = args.new_description
-        save(expenses)
-        print("Updated successfully")
-    elif expenses and args.id and args.new_amount:
-        expenses_to_update = next(expense for expense in expenses if expense['id'] == int(args.id))
-        expenses_to_update['amount'] = args.new_amount
-        save(expenses)
-        print("Updated successfully")
+    if not args.id:
+        print("Error: You must provide an ID to update an expense.")
+    else:
+        try:
+            expense = next(exp for exp in expenses if exp['id'] == int(args.id))
+        except StopIteration:
+            print(f"Error: Expense with ID {args.id} not found.")
+        else:
+            if args.new_description:
+                expense['description'] = args.new_description
+
+            if args.new_amount:
+                try:
+                    expense['amount'] = float(args.new_amount)
+                except ValueError:
+                    print("Error: The amount must be a valid number.")
+            save(expenses)
+            print("Updated successfully")
