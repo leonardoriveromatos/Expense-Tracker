@@ -5,7 +5,7 @@ from datetime import datetime
 # Crear el parser
 parser = argparse.ArgumentParser(description="Expense Tracker CLI")
 
-parser.add_argument("command", choices=["add", "remove", "update", "list", "summary"])
+parser.add_argument("command", choices=["add", "remove", "update", "list", "summary", "delete"])
 parser.add_argument("-d","--description", help = "Create new expense", required = False)
 parser.add_argument("-am","--amount", help = "Amount", required = False)
 parser.add_argument("-i","--id", help = "ID", required = False)
@@ -32,8 +32,15 @@ elif args.command == 'list':
             print(f"ID: {expense['id']}, Description: {expense['description']}, Fecha: {expense['date']}, Time: {expense['time']}")
 elif args.command == 'summary':
     if expenses and args.month:
-        month = int(args.month)  # Obtener el mes desde el argumento
+        month = int(args.month)
         total = sum(int(expense['amount']) for expense in expenses if datetime.strptime(expense['date'], "%Y-%m-%d").month == month)
     elif expenses:
         total = sum(int(expense['amount']) for expense in expenses)
-    print(f"Total expenses for month {month}: {total}")
+    print(f"Total expenses: {total}")
+
+elif args.command == 'delete':
+    if args.id:
+        expenses_to_remove = next(expense for expense in expenses if expense['id'] == int(args.id))
+        expenses.remove(expenses_to_remove)
+        save(expenses)
+        print("Expense deleted successfully")
