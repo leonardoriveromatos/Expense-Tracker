@@ -80,9 +80,9 @@ elif args.command == 'clear':
     if expenses:
         expenses.clear()
         save(expenses)
-        print("The expense list was cleaned")
+        print("The expense list has been cleared.")
     else:
-        print("The expense list is empty")
+        print("No expenses to clear; the list is already empty.")
 
 elif args.command == 'update':
     if not args.id:
@@ -103,3 +103,4 @@ elif args.command == 'update':
                     print("Error: The amount must be a valid number.")
             save(expenses)
             print("Updated successfully")
+
