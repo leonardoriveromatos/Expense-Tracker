@@ -12,3 +12,4 @@ venv/
 *.log
 
 expenses.json
+expenses.csv
