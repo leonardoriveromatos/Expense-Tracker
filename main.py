@@ -1,18 +1,19 @@
 import argparse
-from data import load, save
+from ast import arg
+from data import load, save, export_to_csv
 from datetime import datetime
 
 # Crear el parser
 parser = argparse.ArgumentParser(description="Expense Tracker CLI")
 
-parser.add_argument("command", choices=["add", "remove", "update", "list", "summary", "delete", "clear"])
+parser.add_argument("command", choices=["add", "remove", "update", "list", "summary", "delete", "clear", "export"])
 parser.add_argument("-d","--description", help = "Create new expense", required = False)
 parser.add_argument("-am","--amount", help = "Amount", required = False)
+parser.add_argument("-c","--categorie", help = "Categirie", required = False)
 parser.add_argument("-i","--id", help = "ID", required = False)
 parser.add_argument("-m","--month", help = "Amount", required = False)
 parser.add_argument("-nd","--new_description", help = "New Description", required = False)
 parser.add_argument("-na","--new_amount", help = "New Amount", required = False)
-
 
 args = parser.parse_args()
 
@@ -30,7 +31,8 @@ if args.command == 'add':
                 "date": current_date,
                 "time": current_time,
                 "description": args.description,
-                "amount": float(args.amount)
+                "amount": float(args.amount),
+                "categorie": args.categorie if args.categorie else "Others"
             }
             expenses.append(new_expense)
             save(expenses)
@@ -39,20 +41,27 @@ if args.command == 'add':
             print("Error: Amount must be a valid number.")
     else:
         print("Error: Description and amount are required.")
-        
+
+elif args.command == 'export':
+    export_to_csv(expenses)
+
+
 elif args.command == 'list':
-    if expenses:
-        print("List of Expenses:")
-        for expense in expenses:
-            print(f"ID: {expense['id']}, Description: {expense['description']}, Date: {expense['date']}, Time: {expense['time']}")
+    # Filtramos por categoría si está presente, si no, listamos todos los gastos
+    filtered_expenses = [expense for expense in expenses if not args.categorie or expense.get('categorie') == args.categorie]
+
+    if filtered_expenses:
+        print("List of Expenses:" if not args.categorie else f"List of Expenses for category: {args.categorie}")
+        for expense in filtered_expenses:
+            print(f"ID: {expense['id']}, Description: {expense['description']}, Categorie: {expense.get('categorie', 'others')}, Amount: {expense['amount']}, Date: {expense['date']}")
     else:
-        print("No expenses found.")
+        print("No expenses found." if not args.categorie else f"No expenses found with categorie: {args.categorie}")
+
 
 elif args.command == 'summary':
     if not expenses:
         print("Error: No expenses to summarize.")
     else:
-        total = 0
         if args.month:
             try:
                 month = int(args.month)
